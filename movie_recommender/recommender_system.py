@@ -106,12 +106,18 @@ def fetch_movie_details(movie_id):
         "poster_path": data.get('poster_path'),
         "title": data.get('title'),
         "overview": data.get('overview'),
+        "Genre": data.get('genre'),
         "release_date": data.get('release_date'),
         "runtime": data.get('runtime'),
         "vote_average": data.get('vote_average'),
         "budget": data.get('budget'),
         "popularity": data.get('popularity'),
-        "revenue": data.get('revenue'),
+        "Revenue": data.get('revenue'),
+        "Cast": data.get('cast'),
+        "Crew": data.get('crew'),
+        "Keywords": data.get('keywords'),
+
+
 
     }
 
@@ -147,13 +153,15 @@ def main():
         for movie in recommendations:
             st.image(get_poster_url(movie['poster_path']), width=150)
             st.write(f"""**Title:** {movie['title']}""")
-            st.write(f"Overview:** {movie['overview']}")
+            # st.write(f"Casts:** {movie['cast']}")
+            # st.write(f"Keyword:**{movie['keywords']}")
             st.write(f"**Overview:** {movie['overview']}")
             st.write(f"**Release Date:** {movie['release_date']}")
             st.write(f"**Runtime:** {movie['runtime']}**")
             st.write(f"**Vote Average:** {movie['vote_average']}/10")
             st.write(f"**Popularity:** {movie['popularity']}")
             st.write(f"**Release Date:** {movie['release_date']}")
+            st.write(f"**crew:** {movie['crew']}")
             st.write("---")
 
 
