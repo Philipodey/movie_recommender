@@ -1,21 +1,31 @@
-from setuptools import setup
-
-with open('README.md', 'r', encoding='utf-8') as fh:
-    long_description = fh.read()
-
-AUTHOR_NAME = 'PHILIP ODEY'
-LIST_OF_REQUIREMENTS = ['streamlit']
-SRC_REPO = 'src'
+from setuptools import setup, find_packages
 
 setup(
-    name=SRC_REPO,  # The name of your package
-    version="0.0.1",  # The initial release version
-    description="A sample Python package for movies recommendation",  # Short description of your package
-    author=AUTHOR_NAME,  # Your name as the package author
-    author_email="philipodey75@gmail.com",  # Your email address
-    packages=[SRC_REPO],  # Automatically find and include all packages
-    install_requires=[LIST_OF_REQUIREMENTS],  # External dependencies that your package needs    ,
-    long_description=long_description,
+    name="movie_recommender",
+    version="0.1.0",
+    author="Philip Odey",
+    author_email="philipodey75@gmail.com",
+    description="A Streamlit-based movie recommender system using TMDb API",
+    long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    python_requires='>=3.12'
+    url="https://github.com/Philipodey/movie_recommender.git",
+    packages=find_packages(),
+    install_requires=[
+        'pandas==2.0.3',
+        'numpy==1.24.3',
+        'scikit-learn==1.2.2',
+        'streamlit==1.30.0',
+        'requests==2.31.0',
+    ],
+    entry_points={
+        'console_scripts': [
+            r'movie_recommender\recommender_system=movie_recommender\recommender_system:main',
+        ],
+    },
+    classifiers=[
+        'Programming Language :: Python :: 3',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
+    ],
+    python_requires='>=3.7',
 )
