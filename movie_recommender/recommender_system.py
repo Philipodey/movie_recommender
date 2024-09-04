@@ -8,8 +8,8 @@ import requests
 import os
 
 # Load the datasets
-movies = pd.read_csv(r"C:\Users\DELL\Downloads\recommendation_system_data\tmdb_5000_movies.csv")
-credits = pd.read_csv(r"C:\Users\DELL\Downloads\recommendation_system_data\tmdb_5000_credits.csv")
+movies = pd.read_csv(r"C:/Users/DELL/Downloads/recommendation_system_data/tmdb_5000_movies.csv")
+credits = pd.read_csv(r"C:/Users/DELL/Downloads/recommendation_system_data/tmdb_5000_credits.csv")
 # Merge the datasets on 'id'
 movies = movies.merge(credits, on='title')
 
