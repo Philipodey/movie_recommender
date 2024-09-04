@@ -53,6 +53,7 @@ def clean_data(x):
 
 
 # Apply cleaning and conversion to relevant columns
+movies['overview'] = movies['overview'].fillna('')
 movies['genres'] = movies['genres'].apply(convert_to_list).apply(clean_data)
 movies['keywords'] = movies['keywords'].apply(convert_to_list).apply(clean_data)
 movies['cast'] = movies['cast'].apply(lambda x: [i['name'] for i in ast.literal_eval(x)][:3]).apply(clean_data)
@@ -106,16 +107,16 @@ def fetch_movie_details(movie_id):
         "poster_path": data.get('poster_path'),
         "title": data.get('title'),
         "overview": data.get('overview'),
-        "Genre": data.get('genre'),
+        "genre": data.get('genre'),
         "release_date": data.get('release_date'),
         "runtime": data.get('runtime'),
         "vote_average": data.get('vote_average'),
         "budget": data.get('budget'),
         "popularity": data.get('popularity'),
         "Revenue": data.get('revenue'),
-        "Cast": data.get('cast'),
-        "Crew": data.get('crew'),
-        "Keywords": data.get('keywords'),
+        "cast": data.get('cast'),
+        "crew": data.get('crew'),
+        "keywords": data.get('keywords'),
 
 
 
@@ -136,6 +137,8 @@ def recommend(movie_title):
     for i in movie_list:
         movie_id = movies.iloc[i[0]].movie_id
         details = fetch_movie_details(movie_id)
+        details['cast'] = movies.iloc[i[0]]['cast']
+        details['crew'] = movies.iloc[i[0]]['crew']
         recommended_movies.append(details)
     return recommended_movies
 
@@ -153,11 +156,11 @@ def main():
         for movie in recommendations:
             st.image(get_poster_url(movie['poster_path']), width=150)
             st.write(f"""**Title:** {movie['title']}""")
-            # st.write(f"Casts:** {movie['cast']}")
+            st.write(f"Casts:** {movie['cast']}")
             # st.write(f"Keyword:**{movie['keywords']}")
             st.write(f"**Overview:** {movie['overview']}")
             st.write(f"**Release Date:** {movie['release_date']}")
-            st.write(f"**Runtime:** {movie['runtime']}**")
+            st.write(f"**Runtime:** {movie['runtime']} minutes")
             st.write(f"**Vote Average:** {movie['vote_average']}/10")
             st.write(f"**Popularity:** {movie['popularity']}")
             st.write(f"**Release Date:** {movie['release_date']}")
