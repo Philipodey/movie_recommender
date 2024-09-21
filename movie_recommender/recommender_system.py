@@ -133,10 +133,10 @@ def get_poster_url(poster_path):
 
 
 # Function to recommend movies
-def recommend(movie_title):
+def recommend(movie_title, num_recommendations):
     movie_index = movies[movies['title'] == movie_title].index[0]
     distances = similarity[movie_index]
-    movie_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x: x[1])[1:21]
+    movie_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x: x[1])[1:num_recommendations]
 
     recommended_movies = []
     for i in movie_list:
@@ -155,22 +155,30 @@ def main():
     movie_list = movies['title'].values
     selected_movie = st.selectbox("Select a movie to get recommendations", movie_list)
 
+    # Choose the number of movies to recommend
+    num_recommendations = st.slider("Number of movies to recommend", 1, 10, 5)
+
     if st.button("Recommend"):
-        recommendations = recommend(selected_movie)
-        st.write("Recommended Movies:")
+        recommendations = recommend(selected_movie, num_recommendations)  # Update the recommend function to accept number
+        st.write(f"Top {num_recommendations} Recommended Movies:")
+
+        # Create two columns: left for posters and titles, right for details
+        col1, col2 = st.columns([1, 2])
+
+        # Display movies in the left column, and their details in the right column
         for movie in recommendations:
-            st.image(get_poster_url(movie['poster_path']), width=150)
-            st.write(f"""**Title:** {movie['title']}""")
-            st.write(f"Casts:** {movie['cast']}")
-            # st.write(f"Keyword:**{movie['keywords']}")
-            st.write(f"**Overview:** {movie['overview']}")
-            st.write(f"**Release Date:** {movie['release_date']}")
-            st.write(f"**Runtime:** {movie['runtime']} minutes")
-            st.write(f"**Vote Average:** {movie['vote_average']}/10")
-            st.write(f"**Popularity:** {movie['popularity']}")
-            st.write(f"**Release Date:** {movie['release_date']}")
-            st.write(f"**crew:** {movie['crew']}")
-            st.write("---")
+            with col1:
+                st.image(get_poster_url(movie['poster_path']), width=150)
+                st.write(f"**Title:** {movie['title']}")
+            with col2:
+                # st.write(f"**Casts:** {movie['cast']}")
+                st.write(f"**Overview:** {movie['overview']}")
+                st.write(f"**Release Date:** {movie['release_date']}")
+                st.write(f"**Runtime:** {movie['runtime']} minutes")
+                st.write(f"**Vote Average:** {movie['vote_average']}/10")
+                st.write(f"**Popularity:** {movie['popularity']}")
+                # st.write(f"**Crew:** {movie['crew']}")
+                st.write("---")
 
 
 if __name__ == "__main__":
