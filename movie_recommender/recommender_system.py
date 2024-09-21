@@ -9,8 +9,8 @@ import os
 
 # Load the datasets
 # Using relative path
-movies = pd.read_csv(os.path.join("./recommendation_system_data", "tmdb_5000_movies.csv"))
-credits = pd.read_csv(os.path.join("./recommendation_system_data", "tmdb_5000_credits.csv"))
+movies = pd.read_csv(os.path.join("../recommendation_system_data", "tmdb_5000_movies.csv"))
+credits = pd.read_csv(os.path.join("../recommendation_system_data", "tmdb_5000_credits.csv"))
 
 
 # movies = pd.read_csv(r"C:/Users/DELL/Downloads/recommendation_system_data/tmdb_5000_movies.csv")
