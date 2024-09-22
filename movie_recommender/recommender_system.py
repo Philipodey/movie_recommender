@@ -163,7 +163,7 @@ def main():
         st.write(f"Top {num_recommendations} Recommended Movies:")
 
         # Create two columns: left for posters and titles, right for details
-        col1, col2 = st.columns([1, 2], "large")
+        col1, col2 = st.columns([1, 2])
 
         # Display movies in the left column, and their details in the right column
         for movie in recommendations:
