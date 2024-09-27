@@ -147,35 +147,32 @@ def recommend(movie_title, num_recommendations):
     return recommended_movies
 
 
-def set_background_image(image_url=None):
-    # Set a background image
+def set_background_image(color=None):
     st.markdown(f"""
-    <style>
-    .stApp {{
-        background-image: url("{image_url}");
-        background-size: cover
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-    }}
-    </style>
-    """, unsafe_allow_html=True
-                )
+            <style>
+            .stApp {{
+                background-color: {color};
+            }}
+            </style>
+            """, unsafe_allow_html=True)
 
 
 def main():
     st.markdown("<h1 style='color: #FFD700;'>Enhanced Movie Recommender System</h1>", unsafe_allow_html=True)
 
-    set_background_image(image_url="https://pbs.twimg.com/media/Fzzas5KWAAItJvg?format=jpg&name=medium")
+    set_background_image(color="black")
 
     # List of movie titles from your dataset
     movie_titles = movies['title'].tolist()
 
+    st.markdown("<p style='color: #FFD700;'>Enter movie name</p>", unsafe_allow_html=True)
+
     # Accept user input
-    user_input = st.markdown("<h3>Enter a movie name you like:<h3>")
+    user_input = st.text_input("")
 
     # Slider to choose the number of recommendations
-    num_recommendations = st.slider("Number of movies to recommend", 1, 10, 5)
+    st.markdown("<p style='color: #FFD700;'>Number of movie to recommend</p>", unsafe_allow_html=True)
+    num_recommendations = st.slider("", 1, 10, 5)
 
     # Recommend movies when the button is pressed
     if st.button("Recommend"):
@@ -184,26 +181,34 @@ def main():
 
         if closest_match:
             selected_movie = closest_match[0]  # Closest matching movie title
-            st.write(f"Did you mean: {selected_movie}?")
+            st.markdown(f"<span style='color: #FFD700;'>Did you mean: {selected_movie}?</span>",
+                        unsafe_allow_html=True)
 
             # Call the recommend function with the selected movie
             recommendations = recommend(selected_movie, num_recommendations)
-            st.write(f"Top {num_recommendations} Recommended Movies:")
+            st.markdown(f"<span style='color: #FFD700;'>Top {num_recommendations} Recommended Movies:</span>",
+                        unsafe_allow_html=True)
 
             # Display movies in the left column, and their details in the right column
             for movie in recommendations:
-                st.markdown(f"### **{movie['title']}**")
+                st.markdown(f"<h3 style='color: #FFD700;'>{movie['title']}</h3>", unsafe_allow_html=True)  # Gold color
                 st.image(get_poster_url(movie['poster_path']), width=120)
                 # Display the movie title first, in bold and larger text
                 # Then display the other details
-                st.write(f"**Overview:** {movie['overview']}")
-                st.write(f"**Release Date:** {movie['release_date']}")
-                st.write(f"**Runtime:** {movie['runtime']} minutes")
-                st.write(f"**Vote Average:** {movie['vote_average']}/10")
-                st.write(f"**Popularity:** {movie['popularity']}")
+                st.markdown(f"<span style='color: #FFFFFF;'>**Overview:** {movie['overview']}</span>",
+                            unsafe_allow_html=True)
+                st.markdown(f"<span style='color: #FFFFFF;'>**Release Date:** {movie['release_date']}</span>",
+                            unsafe_allow_html=True)
+                st.markdown(f"<span style='color: #FFFFFF;'>**Runtime:** {movie['runtime']} minutes</span>",
+                            unsafe_allow_html=True)
+                st.markdown(f"<span style='color: #FFFFFF;'>**Vote Average:** {movie['vote_average']}/10</span>",
+                            unsafe_allow_html=True)
+                st.markdown(f"<span style='color: #FFFFFF;'>**Popularity:** {movie['popularity']}</span>",
+                            unsafe_allow_html=True)
                 st.write("---")
         else:
-            st.write("Sorry, no matching movie found.")
+            st.markdown(f"<span style='color: red;'>Sorry, no matching movie found.</span>",
+                        unsafe_allow_html=True)
 
 
 # Entry point for Streamlit app
