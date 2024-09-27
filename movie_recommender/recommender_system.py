@@ -5,13 +5,14 @@ from sklearn.preprocessing import MinMaxScaler
 import ast
 import streamlit as st
 import requests
+import difflib
+
 import os
 
 # Load the datasets
 # Using relative path
 movies = pd.read_csv("tmdb_5000_movies.csv")
 credits = pd.read_csv("tmdb_5000_credits.csv")
-
 
 # movies = pd.read_csv(r"C:/Users/DELL/Downloads/recommendation_system_data/tmdb_5000_movies.csv")
 # credits = pd.read_csv(r"C:/Users/DELL/Downloads/recommendation_system_data/ tmdb_5000_credits.csv")
@@ -123,8 +124,6 @@ def fetch_movie_details(movie_id):
         "crew": data.get('crew'),
         "keywords": data.get('keywords'),
 
-
-
     }
 
 
@@ -148,38 +147,65 @@ def recommend(movie_title, num_recommendations):
     return recommended_movies
 
 
+def set_background_image(image_url=None):
+    # Set a background image
+    st.markdown(f"""
+    <style>
+    .stApp {{
+        background-image: url("{image_url}");
+        background-size: cover
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }}
+    </style>
+    """, unsafe_allow_html=True
+                )
+
+
 def main():
-    st.title("Enhanced Movie Recommender System")
+    st.markdown("<h1 style='color: #FFD700;'>Enhanced Movie Recommender System</h1>", unsafe_allow_html=True)
 
-    # Select a movie from the dropdown
-    movie_list = movies['title'].values
-    selected_movie = st.selectbox("Select a movie to get recommendations", movie_list)
+    set_background_image(image_url="https://pbs.twimg.com/media/Fzzas5KWAAItJvg?format=jpg&name=medium")
 
-    # Choose the number of movies to recommend
+    # List of movie titles from your dataset
+    movie_titles = movies['title'].tolist()
+
+    # Accept user input
+    user_input = st.markdown("<h3>Enter a movie name you like:<h3>")
+
+    # Slider to choose the number of recommendations
     num_recommendations = st.slider("Number of movies to recommend", 1, 10, 5)
 
+    # Recommend movies when the button is pressed
     if st.button("Recommend"):
-        recommendations = recommend(selected_movie, num_recommendations)  # Update the recommend function to accept number
-        st.write(f"Top {num_recommendations} Recommended Movies:")
+        # Use fuzzy matching to find the closest movie title
+        closest_match = difflib.get_close_matches(user_input, movie_titles, n=1, cutoff=0.6)
 
-        # Create two columns: left for posters and titles, right for details
-        col1, col2 = st.columns([1, 2])
+        if closest_match:
+            selected_movie = closest_match[0]  # Closest matching movie title
+            st.write(f"Did you mean: {selected_movie}?")
 
-        # Display movies in the left column, and their details in the right column
-        for movie in recommendations:
-            with col1:
+            # Call the recommend function with the selected movie
+            recommendations = recommend(selected_movie, num_recommendations)
+            st.write(f"Top {num_recommendations} Recommended Movies:")
+
+            # Display movies in the left column, and their details in the right column
+            for movie in recommendations:
+                st.markdown(f"### **{movie['title']}**")
                 st.image(get_poster_url(movie['poster_path']), width=120)
-                st.write(f"**Title:** {movie['title']}")
-            with col2:
-                # st.write(f"**Casts:** {movie['cast']}")
+                # Display the movie title first, in bold and larger text
+                # Then display the other details
                 st.write(f"**Overview:** {movie['overview']}")
                 st.write(f"**Release Date:** {movie['release_date']}")
                 st.write(f"**Runtime:** {movie['runtime']} minutes")
                 st.write(f"**Vote Average:** {movie['vote_average']}/10")
                 st.write(f"**Popularity:** {movie['popularity']}")
-                # st.write(f"**Crew:** {movie['crew']}")
                 st.write("---")
+        else:
+            st.write("Sorry, no matching movie found.")
 
 
+# Entry point for Streamlit app
 if __name__ == "__main__":
     main()
